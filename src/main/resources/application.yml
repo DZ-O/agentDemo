@@ -1,0 +1,38 @@
+spring:
+  main:
+    web-application-type: none
+  application:
+    name: OpenButler
+  ai:
+    openai:
+      api-key: 
+      chat:
+        options:
+          model: qwen3.5-plus
+      base-url: 
+
+  shell:
+    interactive:
+      enabled: false
+    command:
+      help:
+        enabled: false
+      exit:
+        enabled: false
+      clear:
+        enabled: false
+      history:
+        enabled: false
+      quit:
+        enabled: false
+      script:
+        enabled: false
+      stacktrace:
+        enabled: false
+      version:
+        enabled: false
+
+logging:
+  level:
+    root: INFO
+    com.openbutler: DEBUG
