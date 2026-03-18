@@ -2,7 +2,6 @@ package com.openbutler.core.agent;
 
 import com.openbutler.ai.service.AIService;
 import com.openbutler.core.memory.MemoryService;
-import com.openbutler.core.tool.ToolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import java.util.List;
 @Slf4j
 public class AgentCore {
     private final AIService aiService;
-    private final ToolService toolService;
     private final MemoryService memoryService;
 
     public Flux<String> process(String sessionId, String userInput) {

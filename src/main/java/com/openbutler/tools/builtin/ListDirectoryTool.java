@@ -1,34 +1,24 @@
 package com.openbutler.tools.builtin;
 
-import com.fasterxml.jackson.annotation.JsonClassDescription;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.function.Function;
 
-@Component("listDirectory")
-public class ListDirectoryTool implements Function<ListDirectoryTool.Request, String> {
+@Slf4j
+@Component
+public class ListDirectoryTool {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonClassDescription("List files in a directory")
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
-        @JsonPropertyDescription("The directory path to list files from. Defaults to current directory if not specified.")
-        @JsonProperty(required = false)
-        private String path;
-    }
-
-    @Override
-    public String apply(Request request) {
-        String pathStr = request.path != null && !request.path.isEmpty() ? request.path : ".";
+    @Tool(description = "List files in a directory")
+    public String listDirectory(
+            @ToolParam(description = "The directory path to list files from. Defaults to current directory if not specified.", required = false) 
+            String path) {
+        
+        String pathStr = path != null && !path.isEmpty() ? path : ".";
+        log.info("Executing ListDirectoryTool with path: {}", pathStr);
+        
         File dir = new File(pathStr);
         if (!dir.exists() || !dir.isDirectory()) {
             return "Error: Directory not found: " + pathStr;

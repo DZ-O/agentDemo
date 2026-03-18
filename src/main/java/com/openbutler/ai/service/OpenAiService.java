@@ -3,6 +3,7 @@ package com.openbutler.ai.service;
 import com.openbutler.core.system.SystemInfoProvider;
 import com.openbutler.core.tool.DynamicToolManager;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,6 +24,7 @@ public class OpenAiService implements AIService {
         this.toolManager = toolManager;
         this.chatClient = chatClientBuilder
                 .defaultSystem(getSystemPrompt())
+                .defaultAdvisors(new SimpleLoggerAdvisor())
                 .build();
     }
     
@@ -43,13 +45,13 @@ public class OpenAiService implements AIService {
                 ? context + "\n" + promptText 
                 : promptText;
         
-        Set<String> tools = toolManager.getEnabledTools();
+        Set<Object> tools = toolManager.getEnabledTools();
         
         // Workaround: Use call() instead of stream() to avoid MessageAggregator issues with tool calls
         // in Spring AI 1.0.0-M6. This ensures tools are executed correctly without crashing.
         return Mono.fromCallable(() -> chatClient.prompt()
                 .user(fullPrompt)
-                .functions(tools.toArray(new String[0]))
+                .tools(tools.toArray())
                 .call()
                 .content())
                 .flux();
@@ -61,11 +63,11 @@ public class OpenAiService implements AIService {
                 ? context + "\n" + promptText 
                 : promptText;
         
-        Set<String> tools = toolManager.getEnabledTools();
+        Set<Object> tools = toolManager.getEnabledTools();
                 
         return chatClient.prompt()
                 .user(fullPrompt)
-                .functions(tools.toArray(new String[0]))
+                .tools(tools.toArray())
                 .call()
                 .content();
     }

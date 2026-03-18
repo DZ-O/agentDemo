@@ -36,3 +36,6 @@ logging:
   level:
     root: INFO
     com.openbutler: DEBUG
+    org.springframework.ai.chat.client.advisor: DEBUG
+    org.springframework.ai.chat.model.openai: DEBUG
+    org.springframework.ai.model.tool: DEBUG
