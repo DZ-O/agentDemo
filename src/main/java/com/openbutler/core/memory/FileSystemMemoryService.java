@@ -35,7 +35,7 @@ public class FileSystemMemoryService implements MemoryService {
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         
-        // Store in user home directory under .openbutler/conversations
+        // 存储在用户主目录下的 .openbutler/conversations 目录中
         this.storagePath = Paths.get(System.getProperty("user.home"), ".openbutler", "conversations");
     }
 
@@ -83,13 +83,13 @@ public class FileSystemMemoryService implements MemoryService {
 
     @Override
     public String getRelevantContext(String currentInput) {
-        // Simple implementation: return empty for now
+        // 简单实现：目前返回空字符串
         return "";
     }
 
     @Override
     public void updateUserPreference(String key, String value) {
-        // TODO: Implement preferences storage
+        // TODO: 实现偏好存储
     }
 
     @Override
@@ -113,7 +113,7 @@ public class FileSystemMemoryService implements MemoryService {
                 conversationCache.put(sessionId, conversation);
                 return conversation;
             } catch (IOException e) {
-                // Ignore error, create new
+                // 忽略错误，创建新的
             }
         }
 
@@ -148,7 +148,7 @@ public class FileSystemMemoryService implements MemoryService {
             try {
                 messages = objectMapper.readValue(file, new TypeReference<List<Message>>() {});
             } catch (IOException e) {
-                // Ignore error
+                // 忽略错误
             }
         }
         messagesCache.put(sessionId, messages);

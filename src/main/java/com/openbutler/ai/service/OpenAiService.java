@@ -47,8 +47,8 @@ public class OpenAiService implements AIService {
         
         Set<Object> tools = toolManager.getEnabledTools();
         
-        // Workaround: Use call() instead of stream() to avoid MessageAggregator issues with tool calls
-        // in Spring AI 1.0.0-M6. This ensures tools are executed correctly without crashing.
+        // 变通方案：使用 call() 而不是 stream() 来避免 Spring AI 1.0.0-M6 中工具调用的 MessageAggregator 问题
+        // 这确保工具被正确执行而不会崩溃。
         return Mono.fromCallable(() -> chatClient.prompt()
                 .user(fullPrompt)
                 .tools(tools.toArray())

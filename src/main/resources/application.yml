@@ -5,37 +5,16 @@ spring:
     name: OpenButler
   ai:
     openai:
-      api-key: 
+      api-key:
       chat:
         options:
-          model: qwen3.5-plus
-      base-url: 
-
-  shell:
-    interactive:
-      enabled: false
-    command:
-      help:
-        enabled: false
-      exit:
-        enabled: false
-      clear:
-        enabled: false
-      history:
-        enabled: false
-      quit:
-        enabled: false
-      script:
-        enabled: false
-      stacktrace:
-        enabled: false
-      version:
-        enabled: false
+          model:
+      base-url:
 
 logging:
   level:
-    root: INFO
-    com.openbutler: DEBUG
-    org.springframework.ai.chat.client.advisor: DEBUG
-    org.springframework.ai.chat.model.openai: DEBUG
-    org.springframework.ai.model.tool: DEBUG
+    root: debug
+    com.openbutler: debug
+    org.springframework.ai.chat.client.advisor: debug
+    org.springframework.ai.chat.model.openai: debug
+    org.springframework.ai.model.tool: debug

@@ -29,7 +29,7 @@ public class DynamicToolManager {
 
     @PostConstruct
     public void init() {
-        // Register default tools
+        // 注册默认工具
         registerTool(listDirectoryTool);
         registerTool(readFileTool);
         registerTool(runCommandTool);

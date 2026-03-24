@@ -1,0 +1,50 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "application\\.yml"
+      },
+      {
+        "pattern": "application\\.properties"
+      },
+      {
+        "pattern": "application-.*\\.yml"
+      },
+      {
+        "pattern": "application-.*\\.properties"
+      },
+      {
+        "pattern": "logback-spring\\.xml"
+      },
+      {
+        "pattern": "logback\\.xml"
+      },
+      {
+        "pattern": "META-INF/spring\\.factories"
+      },
+      {
+        "pattern": "META-INF/spring/.*"
+      },
+      {
+        "pattern": "META-INF/spring-configuration-metadata\\.json"
+      },
+      {
+        "pattern": "META-INF/additional-spring-configuration-metadata\\.json"
+      },
+      {
+        "pattern": "org/springframework/.*"
+      },
+      {
+        "pattern": "org/jline/.*"
+      },
+      {
+        "pattern": "org/fusesource/jansi/.*"
+      }
+    ]
+  },
+  "bundles": [
+    {
+      "name": "org.springframework.boot.autoconfigure.AutoConfigurationPackages"
+    }
+  ]
+}

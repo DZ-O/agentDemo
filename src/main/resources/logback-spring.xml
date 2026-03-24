@@ -2,13 +2,19 @@
 <configuration>
     <property name="LOG_PATH" value="${user.home}/.openbutler/logs"/>
     <property name="LOG_FILE" value="${LOG_PATH}/application.log"/>
+    <property name="ERROR_LOG_FILE" value="${LOG_PATH}/error.log"/>
 
+    <!-- Console appender - only for errors and warnings to keep CLI clean -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!-- File appender - all logs -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -16,26 +22,58 @@
             <fileNamePattern>${LOG_PATH}/application-%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
+            <!-- max total size of all log files -->
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <!-- Error file appender - only errors -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${ERROR_LOG_FILE}</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{full}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger -->
     <root level="INFO">
         <appender-ref ref="FILE"/>
-        <!-- Only log errors to console to keep CLI clean, or specific info -->
-        <!-- Actually, for a CLI app, we might want to suppress application logs from console 
-             so they don't interfere with the UI. -->
+        <appender-ref ref="ERROR_FILE"/>
     </root>
     
     <!-- Suppress Spring logs in console -->
-    <logger name="org.springframework" level="WARN">
-        <appender-ref ref="CONSOLE"/>
+    <logger name="org.springframework" level="WARN" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
     </logger>
     
-    <logger name="com.openbutler" level="DEBUG">
-         <appender-ref ref="FILE"/>
+    <!-- OpenButler application logs -->
+    <logger name="com.openbutler" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </logger>
+    
+    <!-- Command execution logs - detailed logging -->
+    <logger name="com.openbutler.cli.terminal.command" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </logger>
+    
+    <!-- Exception handler logs - always log errors -->
+    <logger name="com.openbutler.cli.terminal.service.GlobalExceptionHandler" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
     </logger>
 
 </configuration>

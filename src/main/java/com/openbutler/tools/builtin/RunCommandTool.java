@@ -28,7 +28,7 @@ public class RunCommandTool {
                 builder = new ProcessBuilder("sh", "-c", command);
             }
 
-            // Set working directory to current user directory
+            // 设置工作目录为当前用户目录
             builder.directory(new File(System.getProperty("user.dir")));
             builder.redirectErrorStream(true);
 
