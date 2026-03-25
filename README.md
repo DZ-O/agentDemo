@@ -28,12 +28,7 @@ run.bat
 
 #### 开发模式
 ```bash
-# 在GBK终端（chcp 936）
-set MAVEN_OPTS=-Dfile.encoding=GBK -Dsun.stdout.encoding=GBK -Dsun.stderr.encoding=GBK
-mvn spring-boot:run
-
-# 在UTF-8终端（chcp 65001）
-set MAVEN_OPTS=-Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
+# 顺应 Windows 默认编码（通常为GBK），无需指定 UTF-8
 mvn spring-boot:run
 ```
 
@@ -42,43 +37,19 @@ mvn spring-boot:run
 # 先构建
 mvn clean package -DskipTests
 
-# 在GBK终端运行
-java -Dfile.encoding=GBK -Dsun.stdout.encoding=GBK -Dsun.stderr.encoding=GBK -jar target/openbutler-1.0.0.jar
-
-# 在UTF-8终端运行
-java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -jar target/openbutler-1.0.0.jar
+# 顺应 Windows 默认编码运行
+java -jar target/openbutler-1.0.0.jar
 ```
 
 ## 编码说明
 
-### 自动编码检测
+在 Windows 系统下开发和运行 CLI 应用时，强制改变终端编码为 UTF-8（如使用 `chcp 65001`）会导致已知 Bug：中文输入法 (IME) 会发送不完整的多字节字符，导致输入乱码（例如将“你是”截断为“氖”）。
 
-启动脚本（`run-dev.bat` 和 `run.bat`）会**自动检测**当前终端的代码页：
-- **代码页 936** → 使用 GBK 编码
-- **代码页 65001** → 使用 UTF-8 编码
-- **其他代码页** → 默认使用 UTF-8 编码
+因此，本应用的正确做法是：**不要对 Java 应用程序强加 UTF-8 控制台编码，顺应 Windows 系统的默认代码页（如 GBK）即可**。JLine 库依赖自身的 JNA 交互，能确保输入和输出中文都能正确工作。
 
-### 查看当前终端编码
-
-```bash
-chcp
-```
-
-输出示例：
-- `Active code page: 936` → GBK编码
-- `Active code page: 65001` → UTF-8编码
-
-### 切换终端编码
-
-```bash
-# 切换到GBK
-chcp 936
-
-# 切换到UTF-8
-chcp 65001
-```
-
-**注意**: 切换编码后需要重启应用才能生效。
+**强烈建议：**
+- 保持系统默认代码页（通常为 936 / GBK），无需手动执行 `chcp 65001`。
+- 如果已经修改过代码页导致输入输出异常，请重新打开命令行终端，或执行 `chcp 936` 恢复。
 
 ## 环境要求
 
@@ -143,14 +114,12 @@ default >
 
 ### 1. 中文显示乱码
 
-**原因**: JVM编码参数与终端编码不匹配
+**原因**: 强制改变终端编码为 UTF-8 导致了 Windows IME Bug，或在启动时强制指定了与默认系统环境不一致的 `-Dfile.encoding=UTF-8`。
 
 **解决方案**:
-1. **推荐**: 使用提供的启动脚本（`run-dev.bat` 或 `run.bat`），它们会自动检测编码
-2. 如果仍然乱码，手动指定编码参数（见上面的"方法3: 手动运行"）
-3. 确保终端编码与JVM参数一致：
-   - GBK终端（`chcp 936`）→ 使用GBK参数
-   - UTF-8终端（`chcp 65001`）→ 使用UTF-8参数
+1. **推荐**: 直接使用系统默认终端运行（不要手动执行 `chcp 65001`），且不要给 Java 启动命令添加 `-Dfile.encoding=UTF-8` 参数。
+2. 依赖 JLine 自身的 JNA 交互即可保证输入输出的正确性。
+3. 如果已经执行过 `chcp 65001` 导致乱码，请重新打开一个命令行窗口或执行 `chcp 936` 恢复 GBK。
 
 ### 2. 应用启动后立即退出
 

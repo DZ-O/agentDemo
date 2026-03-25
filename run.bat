@@ -15,14 +15,6 @@ REM 检测当前控制台代码页
 for /f "tokens=2 delims=:" %%a in ('chcp') do set CODEPAGE=%%a
 set CODEPAGE=%CODEPAGE: =%
 
-REM 根据代码页设置编码
-if "%CODEPAGE%"=="936" (
-    set ENCODING=GBK
-) else if "%CODEPAGE%"=="65001" (
-    set ENCODING=UTF-8
-) else (
-    set ENCODING=UTF-8
-)
-
-echo Starting OpenButler with %ENCODING% encoding...
-java -Dfile.encoding=%ENCODING% -Dsun.stdout.encoding=%ENCODING% -Dsun.stderr.encoding=%ENCODING% -jar "%JAR_FILE%"
+REM 不再强制根据代码页设置UTF-8编码，顺应Windows系统的默认代码页（通常是GBK），以避免中文输入法bug
+REM 依赖JLine自身的JNA交互来处理编码
+java -jar "%JAR_FILE%"

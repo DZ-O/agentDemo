@@ -8,36 +8,34 @@ import lombok.NoArgsConstructor;
 import java.util.*;
 
 /**
- * ParsedCommand model representing a parsed user command with its arguments.
- * 
- * This class encapsulates the result of parsing user input, distinguishing between
- * commands (starting with /) and regular chat messages. It supports three types of
- * arguments:
- * - Positional arguments: ordered values (e.g., "arg1 arg2")
- * - Named arguments: key-value pairs (e.g., --key=value)
- * - Flag arguments: boolean flags (e.g., --verbose)
- * 
- * Validates: Requirements 2.1-2.11 (Command parsing and routing)
+*ParsedCommand模型表示已解析的用户命令及其参数。
+*
+*此类封装了解析用户输入的结果，区分了命令（以/开头）和常规聊天消息。它支持三种类型
+*参数：
+*-位置参数：有序值（例如，“arg1 arg2”）
+*-命名参数：键值对（例如，--key=value）
+*-标志参数：布尔标志（例如，--verbose）
+*
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParsedCommand {
-    
+
     /**
      * 是否是命令（vs 普通聊天消息）
      * True if the input starts with command prefix (/), false for chat messages
      */
     private boolean isCommand;
-    
+
     /**
      * 命令名称
      * The command name (e.g., "chat", "new", "list")
      * Null for non-command inputs
      */
     private String commandName;
-    
+
     /**
      * 位置参数
      * Ordered positional arguments passed to the command
@@ -45,7 +43,7 @@ public class ParsedCommand {
      */
     @Builder.Default
     private List<String> positionalArgs = new ArrayList<>();
-    
+
     /**
      * 命名参数（--key=value）
      * Named arguments in key-value format
@@ -53,7 +51,7 @@ public class ParsedCommand {
      */
     @Builder.Default
     private Map<String, String> namedArgs = new HashMap<>();
-    
+
     /**
      * 标志参数（--flag）
      * Boolean flag arguments without values
@@ -61,7 +59,7 @@ public class ParsedCommand {
      */
     @Builder.Default
     private Set<String> flags = new HashSet<>();
-    
+
     /**
      * 原始输入
      * The original raw input string as entered by the user

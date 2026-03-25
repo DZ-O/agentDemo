@@ -5,11 +5,11 @@ spring:
     name: OpenButler
   ai:
     openai:
-      api-key:
+      api-key: sk-6754c68e73b1404ebd5b87f5956c6756
       chat:
         options:
-          model:
-      base-url:
+          model: qwen3.5-flash
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
 
 logging:
   level:
